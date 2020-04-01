@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build && npm run execute",
     "build": "tsc --project ./tsconfig.build.json",
-    "execute": "node ./bin/app.js",
+    "execute": "node  --experimental-modules  ./bin/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
