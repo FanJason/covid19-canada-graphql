@@ -56,7 +56,7 @@ const query = () => {
 }
 
 const parseCsv = () => {
-    fs.createReadStream('../data/data.csv')
+    fs.createReadStream('../data/DATA.csv')
         .pipe(csv())
         .on('data', (data: any) => cases.push(data))
         .on('end', query);
