@@ -2,14 +2,21 @@
   "name": "db",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "npm run build && npm run execute",
+    "build": "tsc --project ./tsconfig.build.json ",
+    "execute": "node  --experimental-modules  ./bin/database.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^13.11.0",
+    "@types/pg": "^7.14.3",
+    "csv-parser": "^2.3.2",
     "dotenv": "^8.2.0",
     "pg": "^8.0.0"
   }
