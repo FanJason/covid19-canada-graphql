@@ -12,6 +12,9 @@ const formLastUpdated = (entry: any) => {
     const month = entry["Date case was last updated - month"];
     const day = entry["Date case was last updated - day"];
     const year = entry["Reference period"];
+    if (month == '99' || day == '99') {
+        return "Not stated";
+    }
     return month + "/" + day + "/" + year;
 }
 
@@ -19,6 +22,9 @@ const formDiscoveryDate = (entry: any) => {
     const month = entry["Episode date - month"];
     const day = entry["Episode date - day"];
     const year = entry["Reference period"];
+    if (month == '99' || day == '99') {
+        return "Not stated";
+    }
     return month + "/" + day + "/" + year;
 }
 
