@@ -12,7 +12,7 @@ async function connect() {
         await client.connect();
         await client.query(dropTable);
         await client.query(createTable);
-        insert(testData);
+        await insert(testData);
     } catch (err) {
         console.log(err);
     }
@@ -20,7 +20,7 @@ async function connect() {
 
 function _getInsertQuery(entry) {
     const keys = Object.keys(entry);
-    let start = "INSERT INTO covid19(" + keys[0];
+    let start = "INSERT INTO " + tableName + "(" + keys[0];
     let end = ") values($" + 1;
     for (let i = 1; i < keys.length; i++) {
         start += ", " + keys[i];
@@ -30,15 +30,12 @@ function _getInsertQuery(entry) {
 }
 
 async function insert(data) {
-    try {
-        data.forEach(async (element) => {
-            const addRow = _getInsertQuery(element);
-            const result = await client.query(addRow, Object.values(element));
-            console.log(result);
-        });
-    } catch (err) {
-        console.log(err);
-    }
+    const promises = [];
+    data.forEach((element) => {
+        const addRow = _getInsertQuery(element);
+        promises.push(client.query(addRow, Object.values(element)));
+    });
+    await Promise.all(promises);
 }
 
 connect();
