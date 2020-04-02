@@ -55,7 +55,7 @@ const query = () => {
             transmission: getMapping(entry, "Transmission"),
             hospitalization: getMapping(entry, "Hospitalization"),
             ICU: getMapping(entry, "Intensive care unit"),
-            statue: getMapping(entry, "Status")
+            status: getMapping(entry, "Status")
         };
     });
     fs.writeFileSync("out.json", JSON.stringify(parsed));
