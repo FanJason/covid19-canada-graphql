@@ -52,7 +52,7 @@ const query = () => {
             statue: getMapping(entry, "Status")
         };
     });
-    parsed.forEach(console.log);
+    fs.writeFileSync("out.json", JSON.stringify(parsed));
 }
 
 const parseCsv = () => {
