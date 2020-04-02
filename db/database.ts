@@ -1,19 +1,8 @@
 require("dotenv").config();
+const testData = require("./testData.ts").testData;
 const pg = require("pg");
 const client = new pg.Client(process.env.CONNECTIONSTR);
-
 const tableName = "covid19";
-const testData = {
-    id: 1,
-    dateLastUpdated: "03/30/2020",
-    discoveryDate: "03/30/2020",
-    gender: "Male",
-    ageGroup: "0 to 19 years",
-    transmission: "Travel exposure",
-    hospitalization: "Not stated",
-    ICU: "Unknown",
-    status: "Deceased"
-}
 
 const create = "CREATE TABLE IF NOT EXISTS " + tableName + "(id INTEGER NOT NULL PRIMARY KEY, dateLastUpdated VARCHAR(10), discoveryDate VARCHAR(10), gender VARCHAR(15), ageGroup VARCHAR(16), transmission VARCHAR(150), hospitalization VARCHAR(15), ICU VARCHAR(15), status VARCHAR(15))";
 const drop = "DROP TABLE " + tableName;
@@ -23,7 +12,7 @@ async function connect() {
         await client.connect();
         await client.query(drop);
         await client.query(create);
-        insert();
+        insert(testData);
     } catch (err) {
         console.log(err);
     }
@@ -40,10 +29,13 @@ function getInsertQuery(entry) {
     return start + end + ")";
 }
 
-async function insert() {
+async function insert(data) {
     try {
-        const addRow = getInsertQuery(testData);
-        await client.query(addRow, Object.values(testData));
+        data.forEach(async (element) => {
+            const addRow = getInsertQuery(element);
+            const result = await client.query(addRow, Object.values(element));
+            console.log(result);
+        });
     } catch (err) {
         console.log(err);
     }
