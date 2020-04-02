@@ -3,15 +3,12 @@ import pg from 'pg';
 import fs from 'fs';
 import parseCsv from './migration.js';
 
-
-const data = fs.readFileSync("./testData.json", "utf8");
-const testData: any = JSON.parse(data);
+dotenv.config();
 
 const client = new pg.Client(process.env.CONNECTIONSTR);
 const tableName = "covid19";
 const createTable = "CREATE TABLE IF NOT EXISTS " + tableName + "(id INTEGER NOT NULL PRIMARY KEY, dateLastUpdated VARCHAR(10), discoveryDate VARCHAR(10), gender VARCHAR(15), ageGroup VARCHAR(16), transmission VARCHAR(150), hospitalization VARCHAR(15), ICU VARCHAR(15), status VARCHAR(15))";
 const dropTable = "DROP TABLE IF EXISTS " + tableName;
-dotenv.config();
 
 async function connect() {
     try {
