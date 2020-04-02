@@ -1,10 +1,7 @@
 import csv from 'csv-parser';
 import fs from 'fs';
-const cases: any[] = [];
 
-const data = fs.readFileSync("./mapping.json", "utf8");
-const jsonData: any = JSON.parse(data);
-const getMapping = (entry: any, value: string): any => {
+const getMapping = (entry: any, value: string, jsonData: any): any => {
     return jsonData[value][entry[value]];
 }
 
@@ -28,7 +25,7 @@ const formDiscoveryDate = (entry: any) => {
     return month + "/" + day + "/" + year;
 }
 
-const query = () => {
+const query = (cases: any[], jsonData: any, resolve: any) => {
     const grouped: any[] = [];
     const mapping: Map<Number, Number> = new Map();
     cases.forEach((tableEntry) => {
@@ -50,22 +47,25 @@ const query = () => {
             id: entry["Case identifier number"],
             dateLastUpdated: formLastUpdated(entry),
             discoveryDate: formDiscoveryDate(entry),
-            gender: getMapping(entry, "Gender"),
-            ageGroup: getMapping(entry, "Age group"),
-            transmission: getMapping(entry, "Transmission"),
-            hospitalization: getMapping(entry, "Hospitalization"),
-            ICU: getMapping(entry, "Intensive care unit"),
-            status: getMapping(entry, "Status")
+            gender: getMapping(entry, "Gender", jsonData),
+            ageGroup: getMapping(entry, "Age group", jsonData),
+            transmission: getMapping(entry, "Transmission", jsonData),
+            hospitalization: getMapping(entry, "Hospitalization", jsonData),
+            ICU: getMapping(entry, "Intensive care unit", jsonData),
+            status: getMapping(entry, "Status", jsonData)
         };
     });
-    fs.writeFileSync("out.json", JSON.stringify(parsed));
+    resolve(parsed);
 }
 
-const parseCsv = () => {
-    fs.createReadStream('../data/DATA.csv')
+export default function parseCsv(): any {
+    const cases: any[] = [];
+    const data = fs.readFileSync("./mapping.json", "utf8");
+    const jsonData: any = JSON.parse(data);
+    return new Promise((resolve, reject) => {
+        fs.createReadStream('../data/DATA.csv')
         .pipe(csv())
         .on('data', (data: any) => cases.push(data))
-        .on('end', query);
-};
-
-parseCsv();
+        .on('end', () => query(cases, jsonData, resolve));
+    })
+}
