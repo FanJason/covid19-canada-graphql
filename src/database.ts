@@ -1,13 +1,12 @@
 import dotenv from 'dotenv';
 import pg from 'pg';
-import fs from 'fs';
 import parseCsv from './migration.js';
 
 dotenv.config();
 
 const client = new pg.Client(process.env.CONNECTIONSTR);
 const tableName = "covid19";
-const createTable = "CREATE TABLE IF NOT EXISTS " + tableName + "(id INTEGER NOT NULL PRIMARY KEY, dateLastUpdated VARCHAR(10), discoveryDate VARCHAR(10), gender VARCHAR(15), ageGroup VARCHAR(16), transmission VARCHAR(150), hospitalization VARCHAR(15), ICU VARCHAR(15), status VARCHAR(15))";
+const createTable = "CREATE TABLE IF NOT EXISTS " + tableName + "(id INTEGER NOT NULL PRIMARY KEY, dateLastUpdated VARCHAR(20), discoveryDate VARCHAR(20), gender VARCHAR(20), ageGroup VARCHAR(20), transmission VARCHAR(150), hospitalization VARCHAR(20), ICU VARCHAR(20), status VARCHAR(20))";
 const dropTable = "DROP TABLE IF EXISTS " + tableName;
 
 async function connect() {
@@ -42,4 +41,8 @@ async function insert(data: any) {
     await Promise.all(promises);
 }
 
-connect();
+export default async function getData() {
+    await connect();
+    const getQuery = "SELECT * FROM " + tableName;
+    return await client.query(getQuery);
+};
