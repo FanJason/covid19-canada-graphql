@@ -18,18 +18,26 @@ const dataType = new graphql.GraphQLObjectType({
     }
 });
 
+const list = new graphql.GraphQLList(dataType);
+
+
 const queryType = new graphql.GraphQLObjectType({
   name: 'Query',
   fields: {
     data: {
-        type: dataType,
-        args: {},
-        resolve: async () => {
-          getData().then((data: any) => {
-            console.log(data.rows[0]);
-            return data.rows[0];
-          });
+        type: list,
+      args: {
+        id: {
+          type: graphql.GraphQLInt
         }
+        },
+      resolve: async (source, { id }) => {
+        const data = await getData();
+        if (typeof(id) === 'number') {
+          return data.rows.filter((entry) => entry.id == id);
+        }
+        return data.rows;
+      }
     },
   }
 });
