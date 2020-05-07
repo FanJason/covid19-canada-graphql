@@ -60,7 +60,7 @@ const query = (cases: any[], jsonData: any, resolve: any) => {
 
 export default function parseCsv(): any {
     const cases: any[] = [];
-    const data = fs.readFileSync("./mapping.json", "utf8");
+    const data = fs.readFileSync("../obj/mapping.json", "utf8");
     const jsonData: any = JSON.parse(data);
     return new Promise((resolve, reject) => {
         fs.createReadStream('../data/DATA.csv')
